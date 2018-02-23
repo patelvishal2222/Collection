@@ -1,0 +1,119 @@
+﻿
+<html>
+<head>
+    <!--
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://www.tutorialscollection.com/bootstrap-demo/css/dragndrop-table/dragndrop.table.columns.css" />
+        -->
+</head>
+
+
+<body>
+    <div class="data">
+        <table border=1>
+            <tbody ondrop="drop(event)" ondragover="allowDrop(event)">
+                <tr>
+                    <td>
+                        <div id="1" draggable="true" ondragstart="drag(event)">
+                            One
+                        </div>
+                    </td>
+                    <td>
+                        <div id="4" draggable="true" ondragstart="drag(event)">
+                            four
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="2" draggable="true" ondragstart="drag(event)">
+                            Two
+                            <div>
+                    </td>
+                    <td>
+                        <div id="5" draggable="true" ondragstart="drag(event)">
+                            five
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="3" draggable="true" style="background-color:yellow" ondragstart="drag(event)"> Three  </div>
+                    </td>
+                    <td>
+                        <div id="6" draggable="true" style="background-color:red" ondragstart="drag(event)">
+                            six
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <table border=1>
+            <tbody ondrop="drop(event)" ondragover="allowDrop(event)">
+                <tr>
+                    <td>Four</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Five</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>Six</td>
+                    <td>6</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <script>
+var rowIndex1=-1;
+function allowDrop(ev) {
+
+
+if(ev.target.parentNode.rowIndex==rowIndex1)
+{
+    ev.preventDefault();
+	}
+	if(ev.target.parentNode.parentNode.rowIndex==rowIndex1)
+	{
+	ev.preventDefault();
+	}
+
+	console.log(ev.target.parentNode.parentNode.rowIndex==rowIndex1);
+	console.log(ev.target.parentNode.parentNode.rowIndex+" "+rowIndex1);
+
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("Text", ev.target.id);
+	//ev.dataTransfer.effectAllowed = 'copy';
+	rowIndex1=ev.target.parentNode.parentNode.rowIndex;
+	//debugger;;
+	console.log("Row "+rowIndex1);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("Text");
+
+
+	if(ev.target.parentNode.rowIndex==rowIndex1)
+{
+
+	ev.target.appendChild(document.getElementById(data));
+	}
+	else if(ev.target.parentNode.parentNode.rowIndex==rowIndex1)
+	{
+
+	ev.target.parentNode.appendChild(document.getElementById(data));
+	}
+	rowIndex1=-1;
+}
+    </script>
+</body>
+</html>

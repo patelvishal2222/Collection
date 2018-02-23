@@ -1,0 +1,422 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "Home";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <style>
+     #tbl {
+        position: relative;
+        width: 700px;
+         background-color: #aaa;
+         overflow: hidden;
+         border-collapse: collapse;
+     }
+
+
+    /*thead*/
+    thead {
+        position: relative;
+        display: block; /*seperates the header from the body allowing it to be positioned*/
+        width: 700px;
+        overflow: visible;
+    }
+
+    thead th {
+
+        background-color: #99a;
+        min-width: 120px;
+        height: 32px;
+        border: 1px solid #222;
+    }
+
+    thead th:nth-child(1) {/*first cell in the header*/
+        position: relative;
+        display: block; /*seperates the first cell in the header from the header*/
+        background-color: #88b;
+    }
+
+
+    /*tbody*/
+    tbody{
+        position: relative;
+        display: block; /*seperates the tbody from the header*/
+        width: 1200px;
+        height: 550px;
+        overflow: scroll;
+    }
+
+    tbody td {
+        background-color: #bbc;
+        min-width: 120px;
+        border: 1px solid #222;
+    }
+
+    tbody tr td:nth-child(1) {  /*the first cell in each tr*/
+        position: relative;
+        display: block; /*seperates the first column from the tbody*/
+        
+       
+        background-color: #99a;
+    }
+
+    
+</style>
+<script>
+    $(document).ready(function () {
+        $('tbody').scroll(function (e) { //detect a scroll event on the tbody
+            /*
+            Setting the thead left value to the negative valule of tbody.scrollLeft will make it track the movement
+            of the tbody element. Setting an elements left value to that of the tbody.scrollLeft left makes it maintain 			it's relative position at the left of the table.
+            */
+            $('thead').css("left", -$("tbody").scrollLeft()); //fix the thead relative to the body scrolling
+            $('thead th:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first cell of the header
+            $('tbody td:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first column of tdbody
+        });
+    });
+</script>
+<div id="myModal" class="modal fade">
+
+</div>
+<div>
+    <div class="form-horizontal">
+        <div class="form-group">
+            
+            @Html.Label("Account Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Editor("AccountName", new { htmlAttributes = new { @class = "form-control" } })
+                
+            </div>
+            </div>
+        <div class="form-group">
+            
+            @Html.Label("Date", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Editor("From Date", new { htmlAttributes = new { @class = "form-control datecontrol" } })
+                @Html.Editor("To Date", new { htmlAttributes = new { @class = "form-control datecontrol" } })
+
+            </div>
+            </div>
+        <div class="form-group">
+            
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+            </div>
+            
+            
+            </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Create Account", "Create")
+    
+    @Html.ActionLink("Add Day", "CollectionDay", new { @StartDate = Convert.ToDateTime(Model.Compute("MAX(CollectionDate)","")).AddDays(1) })
+</div>
+
+
+<div >
+    <table border="1" id="tbl" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <thead>
+            <tr>
+
+                @{
+                    DateTime currentDate = Convert.ToDateTime(ViewBag.StartDate);
+                }
+                <th class="fixed-side">  Account</th>
+
+                @while (currentDate <= Convert.ToDateTime(ViewBag.EndDate))
+                {
+
+                    <th id="0"  draggable="true" ondragstart="drag(event)">@currentDate.ToString("dd-MMM-yyyy")</th>
+                    currentDate = currentDate.AddDays(1);
+
+                }
+                <th>Total</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                DataTable AccountMaster = (DataTable)ViewBag.AccountMaster;
+            }
+            @foreach (DataRow row in AccountMaster.Rows)
+            {
+                decimal runningTotal = 0M;
+                <tr  >
+                    <td class="fixed-side">
+                        <a href="/Collections/AccountDisplay?AccountMasterId=@row["accountmasterid"]">
+                            <img src=@row["accountimagepath"] height="0" width="0" data-toggle="tooltip" data-placement="right" title="Account NO: @row["AccountNo"] PanNO: @row["PanNo"] ReceiptAmount @row["ReceiptAmount"]" style="visibility:hidden"  />
+                            <br />
+                            @row["AccountName"]
+                            <br />
+                            @row["ReceiptAmount"]
+                        </a>
+                    </td>
+                    @{
+                currentDate = Convert.ToDateTime(ViewBag.StartDate);
+                    }
+                    @while (currentDate <= Convert.ToDateTime(ViewBag.EndDate))
+                    {
+
+                        <td>
+
+
+                            @foreach (DataRow datarow in Model.Select("AccountMasterId=" + row["AccountMasterId"] + " AND ReceiptDate='" + currentDate.ToString("dd-MMM-yyyy") + "'"))
+                            {
+                                if (Convert.ToBoolean(datarow["isDeleted"] is DBNull ? false : datarow["isDeleted"]) == true)
+                                {
+                                    <div id=@datarow["CollectionId"] draggable="true" ondragstart="drag(event)" style="background-color:red" ondblclick="doubleclick(@datarow["CollectionId"],0 )"> @datarow["Amount"] </div>
+                                    runningTotal = runningTotal + Convert.ToDecimal(datarow["Amount"].ToString());
+                                
+                                }
+                                //advance
+                                else if (Convert.ToDateTime( Convert.ToDateTime(datarow["CollectionDate"]).ToString("dd-MMM-yyyy")) >Convert.ToDateTime( Convert.ToDateTime(datarow["ReceiptDate"]).ToString("dd-MMM-yyyy")))
+                                {
+                                    <div id=@datarow["CollectionId"] draggable="true" ondragstart="drag(event)" style="background-color:greenyellow" title="CollectionDate:@Convert.ToDateTime(datarow["CollectionDate"]).ToString("dd-MMM-yyyy")">
+                                        @datarow["Amount"]
+
+                                    </div>
+                                    runningTotal = runningTotal + Convert.ToDecimal(datarow["Amount"].ToString());
+                                }
+                                //lend Amount
+                                else if (Convert.ToDateTime(Convert.ToDateTime(datarow["CollectionDate"]).ToString("dd-MMM-yyyy")) <Convert.ToDateTime( Convert.ToDateTime(datarow["ReceiptDate"]).ToString("dd-MMM-yyyy")))
+                                {
+                                    <div id=@datarow["CollectionId"] draggable="true" ondragstart="drag(event)" style="background-color:lightblue" title="CollectionDate:@Convert.ToDateTime(datarow["CollectionDate"]).ToString("dd-MMM-yyyy")">
+                                        @datarow["Amount"]
+
+                                    </div>
+                                    runningTotal = runningTotal + Convert.ToDecimal(datarow["Amount"].ToString());
+                                }
+                                else
+                                {
+                                    <div id=@datarow["CollectionId"] draggable="true" ondragstart="drag(event)" style="background-color:azure" ondblclick="doubleclick(@datarow["CollectionId"],1)">
+
+                                        @datarow["Amount"]
+                                    </div>
+                                    runningTotal = runningTotal + Convert.ToDecimal(datarow["Amount"].ToString());
+                                }
+
+
+                            }
+
+                        </td>
+
+                            currentDate = currentDate.AddDays(1);
+
+                    }
+
+                    <td> @runningTotal</td>
+                </tr>
+            }
+            <tr>
+                <td class="fixed-side">Total</td>
+                @{
+                    currentDate = Convert.ToDateTime(ViewBag.StartDate);
+                    decimal runningTotal2 = 0M;
+
+
+                }
+
+
+
+                @while (currentDate <= Convert.ToDateTime(ViewBag.EndDate))
+                {
+
+                    object toatal1=Model.Compute("sum([Amount])", " IsDeleted=0 and ReceiptDate='" + currentDate.ToString("dd-MMM-yyyy") + "'");
+                    decimal total = Convert.ToDecimal(toatal1 is DBNull ? 0 : toatal1);
+                    <td>@total</td>
+                    runningTotal2 = runningTotal2 + Convert.ToDecimal(total);
+
+                    currentDate = currentDate.AddDays(1);
+                }
+
+
+                <td> @runningTotal2</td>
+
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+}
+
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script type="text/javascript">
+    $('.datecontrol').datepicker({
+        dateFormat: 'dd-M-yy'
+    });
+    </script>
+<script>
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
+    function doubleclick(id,value)
+    {
+        var msg = "";
+        if (value == 1)
+        {
+            msg = "Do you want to delete this Record?";
+        }
+        else
+        {
+            msg = "Do you want to undelete this Record?";
+        }
+        var action = "/Collections/Delete/" + id + "?value=" + value;
+
+        
+        
+        if (confirm(msg)) {
+            var row = $(this).closest("tr");
+            var customerId = row.find("span").html();
+            $.ajax({
+                type: "POST",
+                url: "/Collections/Delete",
+                data: '{id: ' + id + ',value:'+value+'}',
+                contentType: "application/json; charset=utf-8",
+
+                success: function (response) {
+
+                    window.location.reload();
+                }
+            });
+        }
+
+    }
+
+    function ChangeDate(id, receiptDate) {
+       
+        var action = "/Collections/ChangeReceiptDate/" + id + "?receiptDate=" + receiptDate;
+        var obj = {
+            id: id,
+            receiptDate: receiptDate
+            
+        };
+
+        
+        
+            $.ajax({
+                type: "POST",
+                url: "/Collections/ChangeReceiptDate",
+                data: '{id:' + id + ',receiptDate:\'' + receiptDate.toString() + '\'}',
+                contentType: "application/json; charset=utf-8",
+
+                success: function (response) {
+
+                    window.location.reload();
+                }
+            });
+        
+
+    }
+
+    function TransferReceiptDate(receiptDate,transferDate) {
+       
+        var action = "/Collections/TransferReceiptDate/" + receiptDate + "?transferDate=" + transferDate;
+       
+
+        
+        
+        $.ajax({
+            type: "POST",
+            url: "/Collections/TransferReceiptDate",
+            data: '{receiptDate:\'' + receiptDate.toString() + '\',transferDate:\'' + transferDate.toString() + '\'}',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (response) {
+
+                window.location.reload();
+            }
+        });
+        
+
+    }
+    var rowIndex1 = -1;
+    function allowDrop(ev) {
+
+
+        if (ev.target.parentNode.rowIndex == rowIndex1) {
+            ev.preventDefault();
+        }
+        if (ev.target.parentNode.parentNode.rowIndex == rowIndex1) {
+            ev.preventDefault();
+        }
+
+        
+
+    }
+
+    function drag(ev) {
+
+
+        
+        ev.dataTransfer.setData("Text", ev.target.id);
+        //ev.dataTransfer.effectAllowed = 'copy';
+        if (ev.target.id == 0) {
+            rowIndex1 = 0;
+            
+            ev.dataTransfer.setData("Text", ev.target.innerHTML);
+        }
+        else {
+            rowIndex1 = ev.target.parentNode.parentNode.rowIndex;
+        }
+        console.log(rowIndex1);
+        //debugger;;
+        
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("Text");
+
+        
+        
+        
+        var elem = $('#tbl th');
+        
+        
+        
+        if (ev.target.parentNode.rowIndex == rowIndex1) {
+            if(rowIndex1==0)
+            {
+               
+               
+                TransferReceiptDate(data, elem[ev.target.cellIndex].innerHTML);
+                
+            }
+            else
+            {
+                ev.target.appendChild(document.getElementById(data));
+                ChangeDate(data, elem[ev.target.cellIndex].innerHTML);
+            }
+            
+        }
+        else if (ev.target.parentNode.parentNode.rowIndex == rowIndex1) {
+            if(rowIndex1==0)
+            {
+                
+               
+                TransferReceiptDate(data, elem[ev.target.parentNode.cellIndex].innerHTML);
+            }
+            else
+            {
+                ev.target.parentNode.appendChild(document.getElementById(data));
+            
+                ChangeDate(data, elem[ev.target.parentNode.cellIndex].innerHTML);
+            }
+        }
+        else
+        {
+            alert('none');
+        }
+            
+        rowIndex1 = -1;
+    }
+</script>

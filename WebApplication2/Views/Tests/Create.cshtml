@@ -1,0 +1,168 @@
+﻿@model WebApplication2.Models.Test
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+
+@using (Html.BeginForm("Create", "Tests", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Test</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                
+                @Html.TextAreaFor(model => model.address, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                
+
+                @Html.DropDownListFor(model => model.Gender, new List<SelectListItem>
+                   { new SelectListItem{Text="Male", Value="false"},
+                     new SelectListItem{Text="Female", Value="true"}}, "Please select")
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                
+                @Html.EditorFor(model => model.BirthDate, new {htmlAttributes = new  { @class = "form-control datecontrol", @placeHolder = "Enter Date of Birth"}})
+                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Age, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Pass, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.EditorFor(model => model.Pass, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Pass, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.com, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.EditorFor(model => model.Pass, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Pass, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.JoinDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.EditorFor(model => model.JoinDate, new { htmlAttributes = new { @class = "form-control datecontrol", @placeHolder = "Enter Date of Birth" } })
+                @Html.ValidationMessageFor(model => model.JoinDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Salary, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.EditorFor(model => model.Salary, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Salary, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Upload your image")
+        </div>
+
+
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.user_image_data, new { Type = "File" })
+            @Html.ValidationMessageFor(model => model.user_image_data)
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @*<button id="btnAdd">Add</button>*@
+                <input type="submit" value="Create" class="btn btn-default">
+                
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+}
+
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+<link href="~/Content/css/bootstrap-datepicker3.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/Site.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+<script type="text/javascript">
+    $('.datecontrol').datepicker({
+        dateFormat: 'dd-M-yy'
+    }); //Initialise any date pickers
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnAdd").click(function () {
+            //alert('add');
+           // adddata();
+
+        });
+
+        function adddata() {
+
+            $.ajax(
+               {
+                   type: "POST", //HTTP POST Method  
+                   url: "Tests/", // Controller/View   
+                   data: { //Passing data  
+                       Name: $("#txtName").val(), //Reading text box values using Jquery   
+                       City: $("#txtAddress").val(),
+                       Address: $("#txtcity").val()
+                   }
+
+               });
+        }
+    });
+</script>

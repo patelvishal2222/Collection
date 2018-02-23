@@ -1,0 +1,100 @@
+﻿@model IEnumerable<WebApplication2.Models.Collection>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+
+<div>
+    
+    <a class="ls-modal" href="/Collections/Create" title="View" data-target="#myModal" data-toggle="modal">Create </a>
+    <div id="myModal" class="modal fade">
+        
+    </div>
+    </div>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountMasterId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CollectionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiptDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountMasterId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CollectionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceiptDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.CollectionId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.CollectionId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.CollectionId }) |
+
+                    <a class="ls-modal" href="/Collections/Edit?id=@item.CollectionId" title="View" data-target="#myModal" data-toggle="modal">View </a>
+                    
+                </td>
+            </tr>
+        }
+
+    </table>
+    <div id="dialog" style="display: none">
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jquery")
+    }
+
+    <script src="~/Content/js/jquery-2.2.3.min.js"></script>
+    <script src="~/Content/js/jquery-ui.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#btnShowModal").click(function () {
+                $("#my-dialog").modal('show');
+
+            });
+
+            $("#btnHideModal").click(function () {
+                // $("#my-dialog").modal('hide');
+            });
+
+
+
+            $('#article-editor').on('shown.bs.modal', function (e) {
+                $("#pageContent").css({ opacity: 1 });
+            })
+
+
+
+        });
+
+
+
+    </script>

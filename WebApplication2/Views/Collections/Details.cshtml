@@ -1,0 +1,50 @@
+﻿@model WebApplication2.Models.Collection
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Collection</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AccountMasterId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccountMasterId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CollectionDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CollectionDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { CollectionId = Model.CollectionId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

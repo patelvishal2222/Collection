@@ -1,0 +1,70 @@
+﻿
+
+
+
+@model System.Data.DataTable
+@using System.Data;
+@{
+    ViewBag.Title = "Daily";
+}
+
+<h2>Month</h2>
+<h2>Daily</h2>
+<div>
+    @Html.ActionLink("Home", "Index")
+
+</div>
+<div>
+    @Html.ActionLink("Add Day", "CollectionDay", new { @StartDate = Convert.ToDateTime(Model.Columns[Model.Columns.Count-1].ToString()).AddDays(1) })
+</div>
+
+
+<table border="1">
+    <thead>
+        <tr>
+            @foreach (DataColumn col in Model.Columns)
+            {
+                //<th>@col.ColumnName</th>
+               <th>   @Html.ActionLink(@col.ColumnName, "CollectionDay", new { @StartDate = @col.ColumnName })</th>
+            }
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow row in Model.Rows)
+        {
+            decimal runningTotal = 0M; 
+            <tr>
+                @foreach (DataColumn col in Model.Columns)
+                {
+                    if (col.ColumnName == "AccountMasterId")
+                    {
+                        //<td>   @Html.ActionLink(Convert.ToDateTime( row[0]).ToString("dd-MMM-yyyy").ToString() , "CollectionDay",new { @StartDate =row[0]})</td>
+                        <td>@row[col.ColumnName]</td>
+                    }
+                    else
+                    {
+                    <td>@row[col.ColumnName]</td>
+                    
+                        runningTotal += Convert.ToDecimal(row[col.ColumnName] is DBNull ? 0 : row[col.ColumnName]); 
+                   }
+                }
+                <td> @runningTotal</td>
+            </tr>
+        }
+        <tr>
+            @foreach (DataColumn col in Model.Columns)
+            {
+                if (col.ColumnName == "AccountMasterId")
+                {
+                    <td>Total</td>
+                }
+                else
+                { 
+                <td>@Model.Compute("sum(["+@col.ColumnName.ToString()+"])","")</td>
+                }
+            }
+            <td> </td>
+        </tr>
+    </tbody>
+</table>

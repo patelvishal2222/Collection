@@ -1,0 +1,66 @@
+﻿* {
+    margin:0;
+    padding:0;
+    top: 0; 
+    left: 0; 
+    bottom: 0; 
+    right: 0;
+}
+body {
+    background-color:white;
+}
+.header{
+    height:670px;
+    background-color:whitesmoke;
+    position:absolute;
+    margin:8% auto;
+    box-shadow: 5px 5px 15px rgba(155, 149, 149, 1.0);
+    border-radius:5px;
+}
+.logo_align {
+    position:relative;
+    top:0;
+    left:0;
+    height:60px;
+    background-color:white;
+    border-radius:10px;
+    border-bottom:1px solid rgba(128, 128, 128, 0.47);
+    margin:0 auto;
+}
+.logo {
+    margin:0 auto;
+}
+.side_bar_left {
+    background-color:white;
+    height:600px;
+    border-radius:10px;
+    border-right:1px solid rgba(128, 128, 128, 0.47);
+    border-bottom:1px solid rgba(128, 128, 128, 0.47);
+}
+.side_bar_right {
+    background-color:white;
+    height:600px;
+    border-radius:10px;
+    border-left:1px solid rgba(128, 128, 128, 0.47);
+    border-bottom:1px solid rgba(128, 128, 128, 0.47);
+}
+.title {
+    color:rgba(155, 149, 149, 1.0);
+    text-align:center;
+    position:relative;
+    margin-top:150px;
+    text-decoration:underline;
+    box-shadow:5px 5px 15px rgba(155, 149, 149, 0.2);
+    border-radius:10px;
+}
+#reg_title{
+    margin-top:50px !important;
+}
+.login_form {
+    margin-top:50px;
+}
+.submit{
+    margin-left:155px;
+}
+
+

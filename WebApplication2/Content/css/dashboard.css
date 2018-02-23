@@ -1,0 +1,166 @@
+﻿* {
+    margin:0;
+    padding:0;
+}
+body {
+    padding:0;
+    margin:0;
+    top:0;
+    bottom:0;
+}
+.main_division{
+    padding:0;
+}
+.side_bar_content{
+    background-color:rgba(0, 0, 0, 0.26);
+    padding:0;
+}
+.main_body{
+    padding:0;
+}
+.images{
+    padding:0;
+    margin-right:20px !important;
+}
+.img{
+    max-height:52px;
+    background-color:white;
+    padding:0;
+    border:0.1px solid rgba(165, 165, 165, 0.30);
+    border-radius:1px;
+}
+.search_menu {
+    float:left;
+    margin-left:0px;
+    padding-bottom:10px;
+}
+.panel_search{
+    clear:both;
+}
+.calender_icon {
+    background-color: rgba(10, 103, 173, 0.86);
+    color: white;
+    height: 33px;
+    float: right;
+    margin-right: 10px;
+    width: 33px;
+    text-align: center;
+    padding: 8px;
+    border-radius:5px;
+}
+.search_menu .searchFilter{
+    float:left;
+}
+.tile{
+    padding:5px !important;
+    margin-left:0px !important;
+    border-radius:10px;
+}
+.tile .panel-body{
+    text-align:center;
+    font-size:50px;
+}
+.tile .panel-heading{
+    border-radius:5px;
+}
+.tile .fa-calendar{
+    font-size:60px;
+}
+.tile .panel-heading .icon{
+    float:right;
+    font-size:20px;
+}
+.images a{
+    background-color:none !important;
+}
+.row{
+    margin-left:0px;
+    margin-right:0px;
+}
+
+#wrapper {
+    padding-left: 70px;
+    transition: all .4s ease 0s;
+    height: 100%
+}
+
+#sidebar-wrapper {
+    margin-left: -150px;
+    left: 70px;
+    width: 150px;
+    background: #222;
+    position: fixed;
+    height: 100%;
+    z-index: 10000;
+    transition: all .4s ease 0s;
+}
+
+.sidebar-nav {
+    display: block;
+    float: left;
+    width: 150px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#page-content-wrapper {
+    padding-left: 0;
+    margin-left: 0;
+    width: 100%;
+    height: auto;
+}
+#wrapper.active {
+    padding-left: 150px;
+}
+#wrapper.active #sidebar-wrapper {
+    left: 150px;
+}
+
+#page-content-wrapper {
+  width: 100%;
+}
+#main_icon
+{
+    float:right;
+   padding-right: 65px;
+   padding-top:20px;
+}
+.sub_icon
+{
+    float:right;
+   padding-right: 65px;
+   padding-top:10px;
+}
+.content-header {
+  height: 65px;
+  line-height: 65px;
+}
+
+.content-header h1 {
+  margin: 0;
+  margin-left: 20px;
+  line-height: 65px;
+  display: inline-block;
+}
+a{  
+    color:white;
+}
+@media (max-width:767px) {
+    #wrapper {
+    padding-left: 70px;
+    transition: all .4s ease 0s;
+}
+#sidebar-wrapper {
+    left: 70px;
+}
+#wrapper.active {
+    padding-left: 150px;
+}
+#wrapper.active #sidebar-wrapper {
+    left: 150px;
+    width: 150px;
+    transition: all .4s ease 0s;
+}
+}
+
+

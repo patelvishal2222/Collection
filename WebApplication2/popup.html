@@ -1,0 +1,294 @@
+﻿
+
+<!DOCTYPE html>
+
+<html class="gr__swisnl_github_io">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <title>jQuery contextMenu</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+
+    <script type="text/javascript">
+
+		try{
+
+			if (typeof jQuery != 'undefined') {
+				document.write('<label style="color:green;">jQuery running version: </label><b>' + jQuery.fn.jquery + '</b>');
+			}
+			else{
+				document.write('<label style="color:red;"> ** ATTENTION ** </label>' + ' jQuery is not running!');
+			}
+		}
+		catch(jse){
+			document.write(' ** ATTENTION **  ' + jse.message);
+		}
+
+		document.write(' - "PopupMenu" is based on code found <a href="https://stackoverflow.com/questions/4495626/making-custom-right-click-context-menus-for-my-web-app" target="_blank">HERE</a>');
+
+
+    </script>
+
+    <!-- CSS that makes popup menu run-->
+    <style>
+        .custom-menu {
+            /* structural css */
+            display: none;
+            z-index: 1000;
+            position: absolute;
+            overflow: hidden;
+        }
+    </style>
+
+    <!-- the custom CSS with the custom style -->
+    <style>
+        .custom-style {
+            /* stylistical css */
+            white-space: nowrap;
+            font-family: verdana;
+            font-size: 13px;
+            color: #333;
+            border-radius: 2px;
+            border: solid 1px #ddd;
+            background-color: #FFF;
+            padding: 0;
+            margin: 0;
+            -webkit-box-shadow: 10px 10px 20px 0px rgba(119,119,119,1);
+            -moz-box-shadow: 10px 10px 20px 0px rgba(119,119,119,1);
+            box-shadow: 10px 10px 20px 0px rgba(119,119,119,1);
+        }
+
+            .custom-style li {
+                padding: 3px 15px 5px 30px;
+                cursor: pointer;
+                list-style-type: none;
+            }
+
+                .custom-style li:hover {
+                    background-color: #EEE; /* DEF */
+                }
+
+                .custom-style li.image {
+                    background-repeat: no-repeat;
+                    background-position: 8px 5px;
+                }
+
+                .custom-style li.delete {
+                    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAABESURBVDhPY/j//z9FGEOgubn5Pz6Mrh6FA8JQRVgB0Qbgw+jqidKEC1PPABiGCoIBATZcz6gBw9MAYjCyHhQDSMf/GQAPPgrAR+lEmQAAAABJRU5ErkJggg==');
+                }
+
+                .custom-style li.edit {
+                    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAAEMSURBVDhPnZOhkoNAEETzxzgUDofCITE4HAoFDouiUFQh+AYMoo83y3JJLrkj11VvgWWmmZlNbpI+Zp7n/eLubVmWReM4vmWapjMBuq7TMAy2d260bfuWvu8t2BvyQTgN6roWbNvG5g+t62pfJKZpmjMZbKmqSvBKmFKBj6GiXZYHtpRlKXgl2vPvqYB5YOIHaQZFUQieRen+HQY8k8gzxrucQZ7ngmfRK/skHH1bBez5VswgyzLBveidgTH1++FiQCzt7HIGaZoKrggDYh8MkiQRXBEVEXucmjOI41hwRfweiD1OzRlEUSRgyn/B9Il9MAjDUOBP4zcon9jj2L9nEATBR/g/mBn8H92+AMRlSI4HRnCNAAAAAElFTkSuQmCC');
+                }
+
+                .custom-style li.refresh {
+                    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAACSSURBVDhPtZJLDsAgCEQ9tRfQw3gir0MziyEjxaafdPESeFCKxmJmn0jlEzxorVmEtVqr9d49V5ZkN0DdnNM98ABoI6AfY6QeeIAVtSk2Ano9zqmIvzFnjegmdF6MhR3/D+ARFH5weQS9RDpCT9JLBNqkm6gH9MADgEeSNapTDzxQsCKeL/M4QIcsH74hlfexcgDQkdsLtKMLtAAAAABJRU5ErkJggg==');
+                }
+
+                .custom-style li.add {
+                    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAABkSURBVDhPpc1bCkAhCEXR5j8qZ+ZFoTjCLsT7sSTNx3L3XzKYmXfpcCjJRAa6dKPDoSQTGejSjQ6HkkxkoEubNhMs3tDS8kG0mWrn8aILVfw9G0JrQZcObuWDaDPVzmMKi32+PhgFEhDFFe1qAAAAAElFTkSuQmCC');
+                }
+    </style>
+
+    <!-- /* CSS for the page */ -->
+    <style>
+        body {
+            color: #444;
+            font-family: verdana;
+            font-size: 13px;
+            padding: 20px;
+        }
+
+        span {
+            border: dotted 1px #ccc;
+            background-color: #eee;
+            margin: 10px 10px;
+            width: 140px;
+            height: 40px;
+            padding-top: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        div {
+            border: dotted 1px #ccc;
+            margin: 30px 0px;
+            padding: 10px;
+        }
+    </style>
+
+    <script type="text/javascript">
+		// The code that implements the PopupMenu 'class'.
+
+		// contextElement: the element we want have assigned a context popup menu.
+		// popupElement:   the popping up menu.
+		// both parameters are used by jQuery. They can be any valid selector or any jQuery element or any DOM element,
+		// (the only thing this class expects id that the menu is made using 'ul'/'li' tags).
+		function PopupMenu(contextElement, popupElement){
+
+			// In that way, the "this" object is 'persisted'.
+			var THIS = this;
+
+			// Sends to the 'outside world' the DOM element that is using the popup menu
+			this.currentTarget;
+
+			// The main purpose of this time is to maintain the menu visible also if the user leaves it accidentally (for a very short time)
+			this.fadeLeaveTime = 300; // The time the menu takes to close after the user leaves without performing any click.
+			this.fadeOpenTime  = 100; // The time the menu takes to open after a right click.
+			this.delayTime     = 300; // The time the menu remains visible if non used (no mouse_over on it) and before start to the fadeOut
+			this.fadeCloseTyme = 100; // The time the menu takes to close after a click on a menu item.
+
+			// this element is evaluated once (is used in many places)
+			this.$popupElement = $(popupElement);
+
+			// START ======================================================================================== //
+			// Manages the context menu for the provided element.
+			// The actions to be performed (on the popup element) every time a contextmenu raises.
+
+			$(contextElement)
+			.contextmenu(function (jqEvent){
+
+				// prevent the custom popup menu if the 'ctrl' key is pressed.
+				if (jqEvent.ctrlKey){ return; }
+
+				// Avoids the real one contextmenu
+				jqEvent.preventDefault();
+
+				// assigns the element that called the current popup.
+				THIS.currentTarget = jqEvent.currentTarget;
+
+				THIS.$popupElement
+				.stop(true, false)           // stops any pending effect
+				.fadeIn(THIS.fadeOpenTime)   // makes the menu visible.
+				.delay(THIS.delayTime)       // waits before call the hover_in function.
+				.fadeOut(THIS.fadeLeaveTime) // close the menu if not used.
+				.css({					     // places the popup menu in the right position
+					top:  (jqEvent.pageY - 0) + "px",
+					left: (jqEvent.pageX - 0) + "px"
+				});
+			});
+			// END  ======================================================================================== //
+
+			// START ======================================================================================== //
+			// The actions to be assigned once.
+
+			function hover_in($element){
+				$element
+				.stop(true, false)
+				.fadeIn(THIS.fadeOpenTime);
+			}
+
+			function hover_out($element){
+				$element.delay(THIS.delayTime).fadeOut(THIS.fadeLeaveTime);
+			}
+
+			// stops the context menu for the items of the popup menu and triggers the click event.
+			function menuItem_contextmenu(jqEvent, $li){
+				jqEvent.preventDefault();
+				$li.trigger('click');
+			}
+
+			this.$popupElement
+			.hover(
+				function(){hover_in ($(this))},
+				function(){hover_out($(this))}
+			)
+			.find('li')
+			.click(function(){
+				$(this).closest('ul').fadeOut(THIS.fadeCloseTyme);
+			})
+			.contextmenu( function(jqEvent){
+				menuItem_contextmenu(jqEvent, $(this));
+			})
+			// END  ======================================================================================== //
+
+
+		}
+    </script>
+
+    <script type="text/javascript">
+
+		// -------------------------------------------------------------------------- \\
+
+		// full jQuery use of the 'PopupMenu'
+		jQuery(document).ready(function (){
+
+			var groupB = new PopupMenu('.groupB', "#pumB");
+
+			jQuery('#pumB li').click(function (){
+				$(groupB.currentTarget)
+				.text($(this).text());
+			});
+		});
+
+		// look at the end of the page for the simplest use of the 'PopupMenu'
+
+    </script>
+</head>
+<body>
+
+    <!-- ===================================================================================================== -->
+    <!-- the click event is managed by jQuery -->
+    <ul class='custom-menu custom-style' id="pumB">
+        <li class="image edit">Edit B</li>
+        <li class="image delete">Delete B</li>
+        <li class="image refresh">Refresh B</li>
+        <li class="image add">Add new B</li>
+    </ul>
+
+    <div>
+        <p>These two elements share the same context popup menu, the click event is managed by jQuery (look at the javascript code).</p>
+        <span class="groupB" id="spnB1">Right click me</span>
+        <span class="groupB" id="spnB2">Right click me</span>
+    </div>
+
+    <!-- ----------------------------------------------------------------------------------------------------- -->
+    <!-- on-line management of the click event -->
+    <ul class='custom-menu custom-style' id="pumA">
+        <li class="image edit" onclick="liEditA_onclick()">Edit A</li>
+        <li class="image delete" onclick="liDeleteA_onclick()">Delete A</li>
+        <li class="image add" onclick="liAddA_onclick()">Add new A</li>
+    </ul>
+
+    <div>
+        <p>This element has its own, different, context popup menu and the click event is managed on line (look at the HTML code).</p>
+        <span id="spnA">Right click me</span>
+    </div>
+
+    <!-- ===================================================================================================== -->
+
+    <p>Hit the '<b>Ctrl</b>' key (while right click) to show the 'real' context menu.</p>
+
+</body>
+
+<script type="text/javascript">
+
+
+		new PopupMenu('#spnA', "#pumA");
+
+		function liEditA_onclick(){
+			$('#spnA').text("Edit A");
+		}
+
+		function liDeleteA_onclick(){
+			$('#spnA').text("Delete A");
+		}
+
+		function liAddA_onclick(){
+			$('#spnA').text("Add A");
+		}
+
+
+</script>
+
+
+<script type="text/javascript">
+
+
+		window.onerror = function() {
+			document.write('<label style="color:red;">** ATTENTION ** Something went wrong :-(</label>');
+		};
+</script>
+</html>

@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Display";
+}
+
+<h2>Display</h2>
+
+<script src="~/Content/js/jquery-2.2.3.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script>
+
+        var app = angular.module('myApp', []);
+       
+    app.controller('customersCtrl', function ($scope, $http) {
+
+
+       
+
+
+        $http({
+            url: '/api/Tests1',
+            method: "GET",
+            data: null,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+        })
+     .then(function (response) {
+
+
+         $scope.tables = [];
+         $scope.cols = ['id', 'name', 'address'];
+         $scope.tables.push({ rows: response.data, cols: Object.keys(response.data[0]) });
+
+
+     },
+ function (response) {
+     alert('error');
+ });
+
+       
+    });
+
+</script>
+
+
+<body>
+    
+        <div ng-app="myApp" ng-controller="customersCtrl">
+
+            <div class="table table-responsive">
+        
+                <table border="1"   >
+                    <tr>
+                        <th ng-repeat="c in tables[0].cols">{{c}}</th>
+                    </tr>
+                    
+                    
+                    <tr ng-repeat="row in tables[0].rows">
+                        
+                        <td ng-repeat="c in tables[0].cols">
+                         
+                            <div>
+                                {{row[c]   }}
+                            </div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+</body>

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<WebApplication2.Models.AccountMaster>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create Account", "Create") |
+    @Html.ActionLink("Monthly", "Month") |
+    @Html.ActionLink("Daily", "Daily") |
+    @Html.ActionLink("DailyReceipt", "DailyReceipt")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PanNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </th>
+        <th>
+            
+            @Html.DisplayNameFor(model => model.AmountCollection)
+            
+        </th>
+        <th></th>
+    </tr>
+    @{ decimal runningTotal = 0M; }
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccountNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccountName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PanNo)
+        </td>
+        <td>
+            @{ runningTotal += item.Amount; }
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDate)
+        </td>
+        <td>
+            
+            @Html.ActionLink(item.AmountCollection.ToString(), "AccountDisplay", "Collections", new { AccountMasterId = item.AccountMasterId }, null)
+            
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.AccountMasterId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.AccountMasterId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.AccountMasterId })
+        </td>
+    </tr>
+}
+
+    <tr>
+        <td colspan="7" ></td>
+        <td>
+            @runningTotal
+        </td>
+        <td></td>
+    </tr>
+</table>

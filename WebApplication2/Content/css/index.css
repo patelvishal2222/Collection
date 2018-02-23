@@ -1,0 +1,22 @@
+﻿.container{
+    position:relative;
+    height:400px;
+    background-color:transparent;
+}
+.panel{
+    position:absolute;
+    background-color:white;
+    margin:150px auto;
+    left:30%;
+    border:5px solid rgba(226,226,226,1);
+}
+.panel-heading
+{
+    margin:0;
+}
+.panel{
+    padding:0;
+}
+.showAfter, .if_already_exist_alert, .validCredentials{
+    display:none;
+}
